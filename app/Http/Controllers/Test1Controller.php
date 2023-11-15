@@ -255,9 +255,6 @@ class YahooWeatherController
 
         $weatherList =  $weather_array["Feature"]["0"]["Property"]["WeatherList"]["Weather"];
 
-        //出力
-        echo "日時:" . $date . "\n";
-        echo "雨量:" . $rainfall. "\n";
 
         $color = new Color;
 
@@ -301,9 +298,7 @@ class YahooWeatherController
 
         $lat = $geo[0];
         $lon = $geo[1];
-        echo "場所：" . $name;
-        echo "緯度：" . $lat . " 経度：" . $lon;
-        echo "<br>";
+
 
         $list = array('lat'=>$lat, 'lon'=>$lon, 'name'=>$name);
         return $list;
