@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
 
-use App\Models\Location;//追記
-use App\Models\Coordinate;//追記
+// use App\Models\Location;//追記
+// use App\Models\Coordinate;//追記
 use App\Models\Weather;
-use App\Models\Rain;
+// use App\Models\Rain;
 
 use App\Http\Controllers\LocationController;
 
@@ -52,15 +52,6 @@ class WeatherController extends Controller
                 self::UpdateDbForecastData();
             }
 
-
-            // if ($this->db_weather->ExistsCurrentData())
-            // {
-            //     $cur_datetime_min = new DateTimeImmutable;
-            //     $cur_datetime_min->createFromFormat('Y/m/d H:i:s', $this->db_weather->GetCurrentMinDatetime());
-
-            // }
-
-
             // 現在と同時刻の実績データがあれば書き換えない
             if ($this->db_weather->ExistsDataByYYYYMMDDHH('current', $now->format('Y'), $now->format('m'), $now->format('d'), $now->format('H')))
             {
@@ -72,8 +63,6 @@ class WeatherController extends Controller
                     self::UpdateDbCurrentData();
                 }
             }
-
-
 
         } else {
             self::UpdateDbForecastData();
@@ -130,30 +119,10 @@ class WeatherController extends Controller
                 $pressure_prev = $d['pressure'];
 
                 $list = self::MakeArray($list, $datetime, '', $d, $pressure_diff);
-        
-                // $list[] = array('date' => $datetime->format('Y/m/d H:i'), 
-                //                 'date_ja' => $date_ja,
-                //                 'date_d' => $datetime->format('d'),
-                //                 'time' => $datetime->format('H:i'),
-                //                 'datetime' => $datetime,
-                //                 'weather1' => $d['weather1'],
-                //                 'weather2' => $d['weather2'],
-                //                 'temp' => round($d['temperature'], 0), // 小数点第1位を四捨五入
-                //                 'rain' => (ceil($d['rainfall'] * 10) / 10),  // 小数点第２位を切り上げ
-                //                 'wind' => $d['wind'],
-                //                 'wind_int' => (int)$d['wind'],
-                //                 'pressure' => $d['pressure'],
-                //                 'pressure_diff' => $pressure_diff
-                //             );
 
                 $date_ja_prev = $date_ja;
             }
         }
-
-
-        // echo "<pre>";
-        // print_r($list);
-        // echo "</pre>";
 
         return $list;
     }
@@ -185,37 +154,14 @@ class WeatherController extends Controller
 
 
                 $list = self::MakeArray($list, $datetime, '', $d, $pressure_diff);
-
-                // $list[] = array('date' => $datetime->format('Y/m/d H:i'), 
-                //                 'date_ja' => '',
-                //                 'date_d' => $datetime->format('d'),
-                //                 'date_j' => $datetime->format('j'),
-                //                 'time' => $datetime->format('H:i'),
-                //                 'hour' => $datetime->format('H'),
-                //                 'datetime' => $datetime,
-                //                 'mode' => $d['mode'],
-                //                 'weather1' => $d['weather1'],
-                //                 'weather2' => $d['weather2'],
-                //                 'temp' => round($d['temperature'], 0), // 小数点第1位を四捨五入
-                //                 'rain' => (ceil($d['rainfall'] * 10) / 10),  // 小数点第２位を切り上げ
-                //                 'wind' => $d['wind'],
-                //                 'wind_int' => (int)$d['wind'],
-                //                 'pressure' => $d['pressure'],
-                //                 'pressure_diff' => $pressure_diff
-                //             );
-
             }
         }
 
         return $list;
     }
 
-
-
     public function GetForecastData()
     {
-
-
         $list = [];
         $date_ja_prev = '';
         $pressure_prev = 0;
@@ -229,15 +175,6 @@ class WeatherController extends Controller
             if ($i == 0)
             {
                 $date_ja = '今日';
-            }
-
-
-            if ($datetime->format('Y/m/d') == $now->format('Y/m/d'))
-            {
-                // if ($date_ja == $date_ja_prev)
-                // {
-                //     $date_ja = '';
-                // }
             }
             
             // if ($t->format('Y/m/d') == $now->add(new DateInterval('P1D'))->format('Y/m/d'))
@@ -259,27 +196,7 @@ class WeatherController extends Controller
             $pressure_prev = $d['pressure'];
 
             $list = self::MakeArray($list, $datetime, $date_ja, $d, $pressure_diff);
-    
-            // $list[] = array('date' => $datetime->format('Y/m/d H:i'), 
-            //                 'date_ja' => $date_ja,
-            //                 'date_d' => $datetime->format('d'),
-            //                 'time' => $datetime->format('H:i'),
-            //                 'datetime' => $datetime,
-            //                 'weather1' => $d['weather1'],
-            //                 'weather2' => $d['weather2'],
-            //                 'temp' => round($d['temperature'], 0), // 小数点第1位を四捨五入
-            //                 'rain' => (ceil($d['rainfall'] * 10) / 10),  // 小数点第２位を切り上げ
-            //                 'wind' => $d['wind'],
-            //                 'wind_int' => (int)$d['wind'],
-            //                 'pressure' => $d['pressure'],
-            //                 'pressure_diff' => $pressure_diff
-            //             );
         }
-
-
-        // echo "<pre>";
-        // print_r($list);
-        // echo "</pre>";
 
         return $list;
     }
@@ -336,12 +253,6 @@ class WeatherController extends Controller
     {
         $open_weather_api = new OpenWeatherApi;
         $weather_current = $open_weather_api->GetCurrentData();
-
-        echo '<br>';
-        echo '<br>';
-        echo '<pre>';
-        print_r($weather_current);
-        echo '</pre>';
 
         $w = $weather_current[0];
 
