@@ -9,7 +9,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
         <!-- <link rel="stylesheet" href="{{ asset('/css/style.css') }}"> -->
 
-        <!-- <meta http-equiv="refresh" content="600"> -->
+        <meta http-equiv="refresh" content="600">
 
         <script>
 
@@ -43,6 +43,13 @@
                 }
             }
         </script>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+  <!--  /独自ライブラリ読み込み -->
+
+
+
+
 
     </head>
     
@@ -88,6 +95,8 @@
 
 
         <main role="main">
+
+
 
             <!-- <section class="jumbotron text-center">
                 <div class="container">
@@ -153,27 +162,19 @@
                 <div class="card mb-4 shadow-sm">
 
                 <div class="row card-body">
-                    @php
-                        $prev_date_ja = '';
-                    @endphp
+
                     @foreach ($weather_forecast as $i => $weather)
                         @if ($i <= 5)
 
                             <div class="col-md-2">
                                 <p class="card-text">
-                                    @if ($weather['date_ja'] != $prev_date_ja)
                                         {{ $weather['date_ja'] }} {{ $weather['time'] }}
-                                    @else
-                                        {{ $weather['time'] }}
-                                    @endif
-                                    @php
-                                        $prev_date_ja = $weather['date_ja'];
-                                    @endphp
+
                                 </p>
 
                                 <div class="text-center">
                                     <div class="border m-2 py-4 border-2 border-secondary-emphasis rounded-3">
-                                        <div class="row">
+                                    <div class="row">
                                             <div class="col">
                                             @if ($weather['weather1'] == "Clear")  <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" style="fill:orange"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/></svg> @endif
                                             @if ($weather['weather1'] == "Clouds") <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512" style="fill:gray"><path d="M0 336c0 79.5 64.5 144 144 144H512c70.7 0 128-57.3 128-128c0-61.9-44-113.6-102.4-125.4c4.1-10.7 6.4-22.4 6.4-34.6c0-53-43-96-96-96c-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32C167.6 32 96 103.6 96 192c0 2.7 .1 5.4 .2 8.1C40.2 219.8 0 273.2 0 336z"/></svg> @endif
@@ -186,6 +187,16 @@
                                                 {{ $weather['temp'] }} ℃
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                @if ($weather['pressure_diff'] > 0)
+                                                &plus;
+                                                @endif
+                                                {{ $weather['pressure_diff'] }} hPa
+                                            </div>
+                                        </div>
+
                                         @if ($weather['wind_int'] > 2)
                                         <div class="row">
                                             <div class="col">
@@ -194,6 +205,7 @@
                                             </div>
                                         </div>
                                         @endif
+
                                         @if ($weather['rain'] > 0)
                                         <div class="row">
                                             <div class="col">
@@ -207,6 +219,7 @@
                                             </div>
                                         </div>
                                         @endif
+
                                     </div>
                                 </div>
 
@@ -219,6 +232,8 @@
                 </div>
                 </div>
                 </div>    
+
+
 
                 <!-- 降水量 -->
 
@@ -280,41 +295,41 @@
                 </div>
                 </div>
                 </div>
+                
+                
+                <!-- グラフ -->
 
-            
+                <div class="row">
+                <div class="col-md-12">
+                <div class="card mb-4 shadow-sm">
 
+                    <!-- <button type="button" id="btn">グラフを更新</button> -->
 
-                <!-- <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                    <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
-                    <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
+                    <div class="row card-body">
+                        <div class="col-md-12 rounded">
+                            <!-- <p class="card-text"> -->
+                                <div style="height:200px;" >
+                                <canvas id="chart1"></canvas>
+                                </div>
+                            <!-- </p> -->
                         </div>
                     </div>
-                    </div>
+    
+                    <div class="row card-body">
+                        <div class="col-md-12 rounded">
+                            <!-- <p class="card-text"> -->
+                                <div style="height:200px;" >
+                                <canvas id="chart2"></canvas>
+                                </div>
+                            <!-- </p> -->
+                        </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card mb-4 shadow-sm">
-                    <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
-                    <div class="card-body">
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                        </div>
-                    </div>
-                    </div>
 
-                </div> -->
+                </div>
+                </div>
+                </div>    
+
+
 
 
             </div>
@@ -332,6 +347,16 @@
         </footer> -->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+
+        <script>                        
+            // 外部ファイルで使用する変数を設定
+            window.Laravel = {};
+            window.Laravel.weather = @json($weather_from_today);
+        </script>
+        <script src="{{ asset('js/chart.js') }}"></script>
+
+
     </body>
  
 </html>

@@ -95,15 +95,48 @@ class Test1Controller extends Controller
         // openWeather ------------------------------------------------------
 
         $openweather = new OpenWeatherApi;
-        $openweather->GetCurrentData();
-        $weather_forecast = $openweather->GetForecastData();
+        // $openweather->GetCurrentData();
+        // $weather_forecast = $openweather->GetForecastData();
+        // $weather_current = $openweather->GetCurrentData();
+
+        // echo '<pre>';
+        // print_r($weather_current);
+        // echo '</pre>';
+
+        $wc = new WeatherController;
+        $weather_forecast = $wc->Get3hForecastData();
+        $weather_from_today = $wc->Get3hForecastDataFromToday();
+
+        // $list = [];
+        // foreach ($weather_forecast as $i => $w)
+        // {
+        //     $list[] = array('datetime' => $w['datetime'], 
+        //                     'weather1' => $w['weather1'],
+        //                     'weather2' => $w['weather2'],
+        //                     'temperature' => $w['temp'],
+        //                     'rainfall' => $w['rain'],
+        //                     'wind' => $w['wind']
+        //                 );
+        // }
+
+        // $list[] = array('date' => $date, 
+        // 'date_ja' => $date_ja,
+        // 'time' => $time,
+        // 'weather1' => $d['weather'][0]['main'],
+        // 'weather2' => $d['weather'][0]['description'],
+        // 'temp' => round($d['main']['temp'], 0), // 小数点第1位を四捨五入
+        // 'rain' => (ceil($rain * 10) / 10),  // 小数点第２位を切り上げ
+        // 'wind' => $d['wind']['speed'],
+        // 'wind_int' => (int)$d['wind']['speed']);
 
 
-
+        // DB登録
+        // $db_rain = new Weather($this->location);
+        // $db_rain->SetData($list);
 
 
         // return view('test1.index')->with('lists', $ret);
-        return view('test1.index', compact('swbt_lists', 'weather_rain', 'weather_forecast'));
+        return view('test1.index', compact('swbt_lists', 'weather_rain', 'weather_forecast', 'weather_from_today'));
     }
 
 }

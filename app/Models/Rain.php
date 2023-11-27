@@ -17,7 +17,7 @@ class Rain extends Model
 
     public function __construct($location = '')
     {
-        parent::__construct(array());
+        parent::__construct($attributes = []);
 
         $this->location = $location;
     }
