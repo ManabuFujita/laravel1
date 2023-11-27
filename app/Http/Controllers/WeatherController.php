@@ -81,6 +81,7 @@ class WeatherController extends Controller
         $date_ja_prev = '';
         $pressure_prev = 0;
         $count = 0;
+        $datetime_prev = new DatetimeImmutable;
 
         foreach ($this->data as $i => $d)
         {
@@ -90,8 +91,45 @@ class WeatherController extends Controller
             }
 
             $datetime = new DateTimeImmutable($d['datetime']);
+            $mode = $d['mode'];
 
-            if ($now->add(DateInterval::createFromDateString('-3 hour')) <= $datetime)
+            if ($now->add(DateInterval::createFromDateString('-3 hour')) <= $datetime 
+                && $mode == 'current'
+                && $count == 0)
+            {
+                $count++;
+
+                $date_ja = '';
+                if ($count == 1)
+                {
+                    $date_ja = '今日';
+                }
+
+                // if ($datetime->format('Y/m/d') == $now->add(DateInterval::createFromDateString('1 day'))->format('Y/m/d'))
+                // {
+                //     if ($datetime->format('H:i') == '00:00')
+                //     {
+                //         $date_ja = '明日';
+                //     }
+                // }
+                // $date_ja_prev = $date_ja;
+                    
+                // if ($count == 1)
+                // {
+                    $pressure_diff = 0;
+                // } else {
+                //     $pressure_diff = $d['pressure'] - $pressure_prev;
+                // }
+                $pressure_prev = $d['pressure'];
+
+                $list = self::MakeArray($list, $datetime, '', $d, $pressure_diff);
+
+                $date_ja_prev = $date_ja;
+            }
+
+            if ($now <= $datetime 
+                && $mode == 'forecast'
+                && $datetime->getTimestamp() > $datetime_prev->getTimestamp())
             {
                 $count++;
 
@@ -122,6 +160,7 @@ class WeatherController extends Controller
 
                 $date_ja_prev = $date_ja;
             }
+            $datetime_prev = $datetime;
         }
 
         return $list;
