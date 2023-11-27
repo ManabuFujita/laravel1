@@ -18,17 +18,17 @@ class Test1Seeder extends Seeder
     DB::table('test1s')->insert(
       [
         [
-          'name' => 'テスト1',
+          'location' => '東京都',
           'created_at' => now(),
           'updated_at' => now(),
         ],
         [
-          'name' => 'テスト2',
+          'location' => '長野市',
           'created_at' => now(),
           'updated_at' => now(),
         ],
         [
-          'name' => 'テスト3',
+          'location' => 'テスト3',
           'created_at' => now(),
           'updated_at' => now(),
         ],

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('todo_lists', function (Blueprint $table) {
+        Schema::create('coordinates', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100); //★追記
+            $table->string('location', 100);
+            $table->string('lat', 20);
+            $table->string('lon', 20);
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('todo_lists');
+        Schema::dropIfExists('coordinates');
     }
 };
