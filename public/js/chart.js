@@ -28,17 +28,18 @@ function drawChart1() {
             labels: date,
             datasets: [
                 {
-                    label: '予想気温',
-                    data: temperature_for,
-                    borderColor: "#FF9999",
-                    backgroundColor: "#00000000",
-                    pointRadius: 0
-                },
-                {
                     label: '実際の気温',
                     data: temperature_cur,
                     borderColor: "#FF3366",
+                    fill: false,
+                    backgroundColor: "#FF3366"
+                },
+                {
+                    label: '予想気温',
+                    data: temperature_for,
+                    borderColor: "#FFBBBB",
                     backgroundColor: "#00000000",
+                    pointRadius: 0
                 }
             ],
         },
@@ -46,6 +47,9 @@ function drawChart1() {
             title: {
                 display: false,
                 text: '気温'
+            },
+            legend: {
+                display: false
             },
             scales: {
                 xAxes: xAxes,
@@ -55,7 +59,7 @@ function drawChart1() {
                         suggestedMin: getMin(temperature_for),
                         stepSize: 10,  // 縦メモリのステップ数
                         callback: function(value, index, values){
-                            return  '     ' + value +  '度'  // 各メモリのステップごとの表記（valueは各ステップの値）
+                            return  '     ' + value + '\u{00B0}C'  // 各メモリのステップごとの表記（valueは各ステップの値）
                         }
                     },
                     // grace: '10%'
@@ -77,24 +81,28 @@ function drawChart2() {
             labels: date,
             datasets: [
                 {
+                    label: '実際の気圧',
+                    data: pressure_cur,
+                    borderColor: "dimgray",
+                    fill: false,
+                    backgroundColor: "dimgray",
+                },
+                {
                     label: '予想気圧',
                     data: pressure_for,
                     borderColor: "lightgray",
                     backgroundColor: "#00000000",
                     pointRadius: 0
                 },
-                {
-                    label: '実際の気圧',
-                    data: pressure_cur,
-                    borderColor: "darkgray",
-                    backgroundColor: "#00000000",
-                }
             ],
         },
         options: {
             title: {
                 display: false,
                 text: '気圧'
+            },
+            legend: {
+                display: false
             },
             scales: {
                 xAxes: xAxes,
