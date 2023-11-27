@@ -1,4 +1,4 @@
-## イメージ
+## 画面イメージ
 ![image](https://github.com/ManabuFujita/laravel1/assets/45511233/7387d319-46df-473f-8d37-817e4114b8ab)
 
 ## 使用API
