@@ -95,4 +95,3 @@ class Test1Controller extends Controller
     }
 
 }
-

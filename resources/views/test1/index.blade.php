@@ -17,7 +17,7 @@
                 if (window.performance.navigation.type === 1) {
 
                     // // document.getElementById() => idで要素を取得
-                    // const element = document.getElementById("end");
+                    const element = document.getElementById("scrollTo");
                     // alert({element});
 
                     // // getBoundingClientRect() => 指定要素の座標情報を取得
@@ -325,6 +325,7 @@
                 </div>    
 
 
+                <div id='scrollTo'> </div>
 
 
             </div>
