@@ -184,8 +184,8 @@ function setAxes() {
         }
     }];
 
-    console.log(gridline_color);
-    console.log(gridline_width);
+    // console.log(gridline_color);
+    // console.log(gridline_width);
     
 }
 

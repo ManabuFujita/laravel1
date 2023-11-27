@@ -17,7 +17,7 @@
                 if (window.performance.navigation.type === 1) {
 
                     // // document.getElementById() => idで要素を取得
-                    const element = document.getElementById("end");
+                    const element = document.getElementById("scrollTo");
                     // alert({element});
 
                     // // getBoundingClientRect() => 指定要素の座標情報を取得
@@ -34,22 +34,17 @@
     // });
 
                     element.scrollIntoView({
-  behavior: 'smooth',
-  block: 'start',
-  inline: 'nearest',
-});
+                        behavior: 'smooth',
+                        block: 'start',
+                        inline: 'nearest',
+                        });
                 } else {
-                    alert('Reloadされてません！');
+                    // alert('Reloadされてません！');
                 }
             }
         </script>
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
-  <!--  /独自ライブラリ読み込み -->
-
-
-
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 
     </head>
     
@@ -330,15 +325,13 @@
                 </div>    
 
 
+                <div id='scrollTo'> </div>
 
 
             </div>
             </div>
 
         </main>
-
-        <div id="end">
-                                            </div>
 
         <!-- <footer class="text-muted fixed-bottom bg-light">
             <div class="container">
