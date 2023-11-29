@@ -10,6 +10,11 @@ var rain_cur = [];
 var pressure_for = [];
 var pressure_cur = [];
 
+var pressure_for_diff_small = [];
+var pressure_for_diff_large = [];
+var pressure_cur_diff_small = [];
+var pressure_cur_diff_large = [];
+
 var gridline_color = [];
 var gridline_width = [];
 
@@ -132,6 +137,39 @@ function drawChart2() {
                     backgroundColor: "dimgray",
                 },
                 {
+                    label: '気圧差大（予想）',
+                    data: pressure_for_diff_large,
+                    borderColor: "lightgray",
+                    backgroundColor: "#FFCC66",
+                    pointRadius: 0,
+                    spanGaps: false // データがない点は途切れる
+                },
+                {
+                    label: '気圧差中（予想）',
+                    data: pressure_for_diff_small,
+                    borderColor: "lightgray",
+                    backgroundColor: "#FFFFCC",
+                    pointRadius: 0,
+                    spanGaps: false // データがない点は途切れる
+                },
+                {
+                    label: '気圧差大（実際）',
+                    data: pressure_cur_diff_large,
+                    borderColor: "lightgray",
+                    backgroundColor: "#FFCC66",
+                    fill: true,
+                    pointRadius: 0,
+                    spanGaps: false // データがない点は途切れる
+                },
+                {
+                    label: '気圧差中（実際）',
+                    data: pressure_cur_diff_small,
+                    borderColor: "lightgray",
+                    backgroundColor: "#FFFFCC",
+                    pointRadius: 0,
+                    spanGaps: false // データがない点は途切れる
+                },
+                {
                     label: '予想気圧',
                     data: pressure_for,
                     borderColor: "lightgray",
@@ -194,6 +232,7 @@ function setData() {
     now = new Date();
 
     date_prev = '';
+    var pressure_prev = 0;
     weather.forEach(function(element) {
 
         // 軸や色の設定
@@ -225,17 +264,52 @@ function setData() {
 
         }
 
-        // グラフ値の設定
-        if (element['mode'] == 'current') {
-            temperature_cur.push(element['temp']);
-            rain_cur.push(element['rain'] * 3 + 0.2); // 現在天気の降水量は1時間単位のため3倍する              
-            pressure_cur.push(element['pressure']);  
+        // 気圧差初期化
+        if (pressure_prev == 0) {
+            pressure_prev = element['pressure'];
         }
+
+
+        // グラフ値の設定
         if (element['mode'] == 'forecast') {
             temperature_for.push(element['temp']);                    
             rain_for.push(element['rain'] + 0.2);                    
             pressure_for.push(element['pressure']);  
+
+            // 気圧差
+            if (Math.abs(pressure_prev - element['pressure']) > 1) {
+                pressure_for_diff_large.push(element['pressure']);
+            } else {
+                pressure_for_diff_large.push(null);
+            }
+
+            if (Math.abs(pressure_prev - element['pressure']) >= 1) {
+                pressure_for_diff_small.push(element['pressure']);
+            } else {
+                pressure_for_diff_small.push(null);
+            }
+
         }
+        if (element['mode'] == 'current') {
+            temperature_cur.push(element['temp']);
+            rain_cur.push(element['rain'] * 3 + 0.2); // 現在天気の降水量は1時間単位のため3倍する              
+            pressure_cur.push(element['pressure']);  
+
+            // 気圧差
+            if (Math.abs(pressure_prev - element['pressure']) > 1) {
+                pressure_cur_diff_large.push(element['pressure']);
+            } else {
+                pressure_cur_diff_large.push(null);
+            }
+
+            if (Math.abs(pressure_prev - element['pressure']) >= 1) {
+                pressure_cur_diff_small.push(element['pressure']);
+            } else {
+                pressure_cur_diff_small.push(null);
+            }
+
+        }
+        pressure_prev = element['pressure'];
 
         date_prev = element['date_j'];                  
     });
