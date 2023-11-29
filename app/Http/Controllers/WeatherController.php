@@ -166,10 +166,47 @@ class WeatherController extends Controller
         return $list;
     }
 
-    public function Get3hForecastDataFromToday()
+    // public function Get3hForecastDataFromToday()
+    // {
+    //     $today = new DateTimeImmutable();
+    //     $today = DateTimeImmutable::createFromFormat('Y/m/d H:i:s', $today->format('Y/m/d' . ' 00:00:00'));
+
+    //     $list = [];
+    //     $date_ja_prev = '';
+    //     $pressure_prev = 0;
+    //     $count = 0;
+    //     foreach ($this->data as $i => $d)
+    //     {
+    //         $datetime = new DateTime($d['datetime']);
+
+    //         if ($today <= $datetime)
+    //         {
+    //             $count++;
+                    
+    //             if ($count == 1)
+    //             {
+    //                 $pressure_diff = 0;
+    //             } else {
+    //                 $pressure_diff = $d['pressure'] - $pressure_prev;
+    //             }
+    //             $pressure_prev = $d['pressure'];
+
+
+    //             $list = self::MakeArray($list, $datetime, '', $d, $pressure_diff);
+    //         }
+    //     }
+
+    //     return $list;
+    // }
+
+    public function Get3hForecastDataFrom($date_string = '-1 day')
     {
-        $today = new DateTimeImmutable();
-        $today = DateTimeImmutable::createFromFormat('Y/m/d H:i:s', $today->format('Y/m/d' . ' 00:00:00'));
+        $date_target = new DateTime();
+        $date_target->setTime(0, 0, 0, 0);
+        $date_target->add(DateInterval::createFromDateString($date_string));
+        // $date = DateTimeImmutable::createFromFormat('Y/m/d H:i:s', $date->format('Y/m/d' . ' 00:00:00'));
+
+        // echo $date_target->format('Y-m-d H:i:s');
 
         $list = [];
         $date_ja_prev = '';
@@ -179,7 +216,7 @@ class WeatherController extends Controller
         {
             $datetime = new DateTime($d['datetime']);
 
-            if ($today <= $datetime)
+            if ($date_target->getTimestamp() <= $datetime->getTimestamp())
             {
                 $count++;
                     
@@ -198,6 +235,7 @@ class WeatherController extends Controller
 
         return $list;
     }
+
 
     public function GetForecastData()
     {

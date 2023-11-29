@@ -88,8 +88,13 @@ class Test1Controller extends Controller
         // $openweather = new OpenWeatherApi;
 
         $wc = new WeatherController;
+
+        // 3時間天気予報用
         $weather_forecast = $wc->Get3hForecastData();
-        $weather_from_today = $wc->Get3hForecastDataFromToday();
+
+        // グラフ用
+        // $weather_from_today = $wc->Get3hForecastDataFromToday();
+        $weather_from_today = $wc->Get3hForecastDataFrom('-1 days');
 
         return view('test1.index', compact('swbt_lists', 'weather_rain', 'weather_forecast', 'weather_from_today'));
     }
