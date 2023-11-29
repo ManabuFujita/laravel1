@@ -248,13 +248,13 @@ function setData() {
                 gridline_width.push(1);
             } else {
                 date.push('');
-                if (element['hour'] == 12) {
-                    gridline_color.push('lightgray');
-                    gridline_width.push(1);
+                if (from <= now && now < to) {
+                    gridline_color.push('teal');
+                    gridline_width.push(3);
                 } else {
-                    if (from <= now && now < to) {
-                        gridline_color.push('teal');
-                        gridline_width.push(3);
+                    if (element['hour']%6 == 0) {
+                        gridline_color.push('lightgray');
+                        gridline_width.push(1);
                     } else {
                         gridline_color.push('#ffffff');
                         gridline_width.push(1);
