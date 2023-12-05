@@ -23,6 +23,7 @@ return new class extends Migration
             $table->float('rainfall');
             $table->float('wind');
             $table->float('pressure');
+            $table->integer('cloud');
             $table->timestamps();
 
             $table->unique(['location', 'mode', 'datetime']);

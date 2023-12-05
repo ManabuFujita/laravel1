@@ -64,7 +64,8 @@ class OpenWeatherApi
             'temp' => round($data['main']['temp'], 0), // 小数点第1位を四捨五入
             'rain' => (ceil($rain * 10) / 10),  // 小数点第２位を切り上げ
             'wind' => $data['wind']['speed'],
-            'pressure' => $data['main']['pressure']
+            'pressure' => $data['main']['pressure'],
+            'cloud' => $data['clouds']['all']
         );
 
         return $array;

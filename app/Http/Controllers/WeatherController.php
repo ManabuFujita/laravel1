@@ -295,7 +295,8 @@ class WeatherController extends Controller
                          'wind' => $d['wind'],
                          'wind_int' => (int)$d['wind'],
                          'pressure' => $d['pressure'],
-                         'pressure_diff' => $pressure_diff
+                         'pressure_diff' => $pressure_diff,
+                         'cloud' => $d['cloud']
                         );        
 
         return $array;
@@ -315,7 +316,8 @@ class WeatherController extends Controller
                                   'temperature' => $w['temp'],
                                   'rainfall' => $w['rain'],
                                   'wind' => $w['wind'],
-                                  'pressure' => $w['pressure']
+                                  'pressure' => $w['pressure'],
+                                  'cloud' => $w['cloud']
                                 );
         }
 
@@ -345,7 +347,8 @@ class WeatherController extends Controller
                                   'temperature' => $w['temp'],
                                   'rainfall' => $w['rain'],
                                   'wind' => $w['wind'],
-                                  'pressure' => $w['pressure']
+                                  'pressure' => $w['pressure'],
+                                  'cloud' => $w['cloud']
                                 );
         // }
 

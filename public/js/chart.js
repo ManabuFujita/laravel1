@@ -15,6 +15,9 @@ var pressure_for_diff_large = [];
 var pressure_cur_diff_small = [];
 var pressure_cur_diff_large = [];
 
+var cloud_for = [];
+var sun_for = [];
+
 var gridline_color = [];
 var gridline_width = [];
 
@@ -72,7 +75,29 @@ function drawChart1() {
                     yAxisID: "rain",
                     borderWidth: 1,
                     // showLine: false
-                }
+                },
+                {
+                    label: '快晴%',
+                    data: sun_for,
+                    borderColor: 'rgba(255, 204, 153, 0.2)',
+                    backgroundColor: 'rgba(255, 204, 153, 0.2)',
+                    // fill: true,
+                    pointRadius: 0,
+                    yAxisID: "cloud",
+                    borderWidth: 1,
+                    // showLine: false
+                },
+                {
+                    label: '雲%',
+                    data: cloud_for,
+                    borderColor: 'rgba(225, 225, 225, 0.2)',
+                    backgroundColor: 'rgba(225, 225, 225, 0.2)',
+                    // fill: true,
+                    pointRadius: 0,
+                    yAxisID: "cloud",
+                    borderWidth: 1,
+                    // showLine: false
+                },
             ],
         },
         options: {
@@ -103,11 +128,25 @@ function drawChart1() {
                         id: 'rain',
                         position: 'right',
                         ticks: {
-                            suggestedMax: 15,
+                            Max: 0,
+                            suggestedMin: -20,
+                            stepSize: 10,  // 縦メモリのステップ数
+                            callback: function(value, index, values){
+                                return  '     ' + -1 * value + 'mm'  // 各メモリのステップごとの表記（valueは各ステップの値）
+                            }
+                        },
+                        // grace: '10%'
+                    },
+                    {
+                        id: 'cloud',
+                        position: 'right',
+                        display: false,
+                        ticks: {
+                            suggestedMax: 100,
                             suggestedMin: 0,
                             stepSize: 10,  // 縦メモリのステップ数
                             callback: function(value, index, values){
-                                return  '     ' + value + 'mm'  // 各メモリのステップごとの表記（valueは各ステップの値）
+                                return  '     ' + value + '%'  // 各メモリのステップごとの表記（valueは各ステップの値）
                             }
                         },
                         // grace: '10%'
@@ -272,9 +311,15 @@ function setData() {
 
         // グラフ値の設定
         if (element['mode'] == 'forecast') {
-            temperature_for.push(element['temp']);                    
-            rain_for.push(element['rain'] + 0.2);                    
-            pressure_for.push(element['pressure']);  
+            temperature_for.push(element['temp']);
+            rain_for.push( - element['rain']);
+            pressure_for.push(element['pressure']);
+
+            // cloud_for.push(element['cloud']);
+            // sun_for.push(100);
+
+            cloud_for.push(100);
+            sun_for.push(100-element['cloud']);
 
             // 気圧差
             if (Math.abs(pressure_prev - element['pressure']) > 1) {
@@ -292,7 +337,7 @@ function setData() {
         }
         if (element['mode'] == 'current') {
             temperature_cur.push(element['temp']);
-            rain_cur.push(element['rain'] * 3 + 0.2); // 現在天気の降水量は1時間単位のため3倍する              
+            rain_cur.push( - element['rain'] * 3); // 現在天気の降水量は1時間単位のため3倍する              
             pressure_cur.push(element['pressure']);  
 
             // 気圧差

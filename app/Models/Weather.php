@@ -141,9 +141,10 @@ class Weather extends Model
                  'temperature' => $d['temperature'],
                  'rainfall' => $d['rainfall'],
                  'wind' => $d['wind'],
-                 'pressure' => $d['pressure']
+                 'pressure' => $d['pressure'],
+                 'cloud' => $d['cloud'],
                 ],
-            ], ['location', 'mode', 'datetime'], ['weather1', 'weather2', 'temperature', 'rainfall', 'wind', 'pressure']);
+            ], ['location', 'mode', 'datetime'], ['weather1', 'weather2', 'temperature', 'rainfall', 'wind', 'pressure', 'cloud']);
         }
     }
 
