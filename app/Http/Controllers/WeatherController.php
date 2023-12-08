@@ -69,7 +69,8 @@ class WeatherController extends Controller
         }
 
         // DBから取得し直す
-        $this->data = $this->db_weather->GetAllData();
+        // $this->data = $this->db_weather->GetAllData();
+        self::GetAllData();
     }
 
     public function Get3hForecastData()
@@ -208,14 +209,21 @@ class WeatherController extends Controller
 
         // echo $date_target->format('Y-m-d H:i:s');
 
+        $now = new DateTimeImmutable();
+
         $list = [];
         $date_ja_prev = '';
         $pressure_prev = 0;
         $count = 0;
+
+        $d_prev_for = [];
+        $datetime_prev = [];
+
         foreach ($this->data as $i => $d)
         {
             $datetime = new DateTime($d['datetime']);
 
+            // 指定日以降のデータのみ抽出
             if ($date_target->getTimestamp() <= $datetime->getTimestamp())
             {
                 $count++;
@@ -228,6 +236,18 @@ class WeatherController extends Controller
                 }
                 $pressure_prev = $d['pressure'];
 
+                // 過去データの補間
+                if ($datetime->getTimestamp() < $now->getTimestamp())
+                {
+                    $hasCurrent = self::HasCurrentData($datetime);
+
+                    if ($hasCurrent == false)
+                    {
+                        $d2 = clone $d;
+                        $d2['mode'] = 'current';
+                        $list = self::MakeArray($list, $datetime, '', $d2, $pressure_diff);
+                    }
+                }
 
                 $list = self::MakeArray($list, $datetime, '', $d, $pressure_diff);
             }
@@ -235,7 +255,6 @@ class WeatherController extends Controller
 
         return $list;
     }
-
 
     public function GetForecastData()
     {
@@ -302,6 +321,25 @@ class WeatherController extends Controller
         return $array;
     }
 
+    private function HasCurrentData(DateTime $datetime)
+    {
+        $hasCurrent = false;
+        foreach ($this->data as $d)
+        {
+            $datetime2 = new DateTime($d['datetime']);
+            if ($datetime2->getTimestamp() == $datetime->getTimestamp())
+            {
+                if ($d['mode'] == 'current')
+                {
+                    $hasCurrent = true;
+                    break;
+                }
+            }
+        }
+
+        return $hasCurrent;
+    }
+
     private function UpdateDbForecastData()
     {
         $open_weather_api = new OpenWeatherApi;
@@ -325,7 +363,8 @@ class WeatherController extends Controller
         $this->db_weather->SetForecastData($this->data);
 
         // DBから取得し直す
-        $this->data = $this->db_weather->GetAllData();
+        // $this->data = $this->db_weather->GetAllData();
+        self::GetAllData();
     }
 
     private function UpdateDbCurrentData()
@@ -356,7 +395,17 @@ class WeatherController extends Controller
         $this->db_weather->SetCurrentData($this->data);
 
         // DBから取得し直す
+        // $this->data = $this->db_weather->GetAllData();
+        self::GetAllData();
+    }
+
+    private function GetAllData()
+    {
+        // DBから取得し直す
         $this->data = $this->db_weather->GetAllData();
+
+
+
     }
 
 }
