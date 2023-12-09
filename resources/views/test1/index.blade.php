@@ -7,7 +7,11 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>テスト</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <!-- <link rel="stylesheet" href="{{ asset('/css/style.css') }}"> -->
+        <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+        <!-- <link rel="stylesheet" href="style.css"> -->
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
         <meta http-equiv="refresh" content="600">
 
@@ -153,12 +157,15 @@
 
                 <!-- 3h 天気予報 -->
 
-                <div id="temp" class="temp row">
+                <div id="3hweather" class="3hweather temp row">
                 <div class="col-md-12">
                 <div class="card mb-4 shadow-sm">
 
-                <div class="row card-body">
+                <span class="title">3h weather</span>
+                    <!-- <div class='box'>
+                    </div> -->
 
+                <div class="box row card-body">
                     @foreach ($weather_forecast as $i => $weather)
                         @if ($i <= 5)
 
@@ -243,7 +250,7 @@
 
 
 
-                <!-- 降水量 -->
+                <!-- 1時間降水量 -->
 
                 <div class="row">
                 <div class="col-md-12">
@@ -352,15 +359,54 @@
             </div>
         </footer> -->
 
+        <!-- Bootstrap -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 
 
-        <script>                        
+        <script>
+            // グラフ用
             // 外部ファイルで使用する変数を設定
             window.Laravel = {};
             window.Laravel.weather = @json($weather_from_today);
         </script>
         <script src="{{ asset('js/chart.js') }}"></script>
+
+        <script>
+            var title = '';
+            //アコーディオンをクリックした時の動作
+            $('.title').on('click', function() {
+                var findElm = $(this).next(".box");//直後のアコーディオンを行うエリアを取得し
+                $(findElm).slideToggle();//アコーディオンの上下動作
+                    
+                //タイトル要素にクラス名closeがあれば消し、無ければ付ける
+                if($(this).hasClass('close')){
+                    $(this).removeClass('close');
+                }else{
+                    $(this).addClass('close');
+                }
+
+                // タイトル文字を消す
+                if($(this).text() === '　') {
+                    $(this).text(title);
+                } else {
+                    title = $(this).text();
+                    $(this).text('　');
+                }
+            });
+
+            //ページが読み込まれた際にopenクラスをつけ、openがついていたら開く動作※不必要なら下記全て削除
+            $(window).on('load', function(){
+                $('.box').hide(); // 初期状態を非表示に
+
+                $('.accordion-area li:first-of-type section').addClass("open"); //accordion-areaのはじめのliにあるsectionにopenクラスを追加
+                $(".open").each(function(index, element){ //openクラスを取得
+                    var Title =$(element).children('.title'); //openクラスの子要素のtitleクラスを取得
+                    $(Title).addClass('close');       //タイトルにクラス名closeを付与し
+                    var Box =$(element).children('.box'); //openクラスの子要素boxクラスを取得
+                    $(Box).slideDown(500);          //アコーディオンを開く
+                });
+            });
+        </script>
 
 
     </body>
