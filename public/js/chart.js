@@ -300,7 +300,8 @@ function setData() {
                     }
                 }
             }
-
+            
+            date_prev = element['date_j'];                  
         }
 
         // 気圧差初期化
@@ -356,7 +357,6 @@ function setData() {
         }
         pressure_prev = element['pressure'];
 
-        date_prev = element['date_j'];                  
     });
 
     setAxes();
