@@ -6,12 +6,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>テスト</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
-        <!-- <link rel="stylesheet" href="style.css"> -->
 
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+        <!-- <link rel="stylesheet" href="style.css"> -->
 
         <meta http-equiv="refresh" content="600">
 
@@ -115,12 +116,12 @@
             <div class="container">
 
                 <!-- 室温 -->
-                <div class="row">
+                <div class="row switchbot">
                     @foreach ($swbt_lists as $item)
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
                             <!-- <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap"> -->
-                            <div class="card-body">
+                            <div id="{{ $item['id'] }}" class="card-body">
                                 <p class="card-text">
                                     <!-- 温度計マーク -->
                                     <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -129,12 +130,12 @@
                                 </p>
                                 <div class="row my-4">
                                     <div class="col-md-6 text-center">
-                                        <div class="border m-2 py-3 border-2 border-secondary-emphasis rounded-3" style="background-color:#{{ $item['temperature_color'] }}">
+                                        <div class="temperature border m-2 py-3 border-2 border-secondary-emphasis rounded-3" style="background-color:#{{ $item['temperature_color'] }}">
                                             {{ $item['temperature'] }} ℃
                                         </div>
                                     </div>
                                     <div class="col-md-6 text-center">
-                                        <div class="border m-2 py-3 border-2 border-secondary-emphasis rounded-3" style="background-color:#{{ $item['humidity_color'] }} !important">
+                                        <div class="humidity border m-2 py-3 border-2 border-secondary-emphasis rounded-3" style="background-color:#{{ $item['humidity_color'] }} !important">
                                             {{ $item['humidity'] }} %
                                         </div>
                                     </div>
@@ -406,6 +407,40 @@
                     $(Box).slideDown(500);          //アコーディオンを開く
                 });
             });
+
+            // ループ処理
+            MINUTES = 1;
+            FRAME_TIME = MINUTES * 60 * 1000; // [ms/frame]
+            setInterval(function() {
+                // console.log(Date.now());
+                getData();
+            }, FRAME_TIME);
+
+            function getData() {
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/test1/getTemp',
+                    type: 'get',
+                    dataType: 'JSON',
+                    // data: {
+                    //     "param": // Controllerに渡したい値
+                    // }
+                }).done(function (data) {
+                    // console.log(data);
+                    data.forEach(function(d) {
+                        // 値を変更
+                        $('.switchbot #' + d['id']).find('.temperature').text(d['temperature'] + ' ℃');
+                        $('.switchbot #' + d['id']).find('.humidity').text(d['humidity'] + ' %');
+                        // 色を変更
+                        $('.switchbot #' + d['id']).find('.temperature').css('background-color', d['temperature_color']);
+                        $('.switchbot #' + d['id']).find('.humidity').css('background-color', d['humidity_color']);
+                    });
+
+
+                    // $('#table').append(data['view'])
+                }).fail(function () {
+                    alert("エラーが起きました！");
+                });
+            }
         </script>
 
 

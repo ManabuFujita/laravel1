@@ -31,6 +31,7 @@ Route::get('/list', [TodoListController::class, 'index']);
 
 // Route::get('/test1', [Test1Controller::class, 'index']);
 Route::get('/test1', [Test1Controller::class, 'index2']);
+Route::get('/test1/getTemp', [Test1Controller::class, 'getTemp']);
 
 
 

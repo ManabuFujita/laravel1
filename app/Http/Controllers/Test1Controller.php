@@ -99,4 +99,72 @@ class Test1Controller extends Controller
         return view('test1.index', compact('swbt_lists', 'weather_rain', 'weather_forecast', 'weather_from_today'));
     }
 
+
+    public function ajaxTest()
+    {
+        // 位置情報 -----------------------------------------------------------
+        $lc = new LocationController;
+        $this->location = $lc->GetLocation();
+        $lat = $lc->GetLat();
+        $lon = $lc->GetLon();
+
+
+
+        // yahoo -------------------------------------------------------------
+        $yahoo_weather = new YahooWeatherApi;
+
+
+        // １時間降水量を取得
+        $weather_rain = $yahoo_weather->GetRainForecast();
+        
+        // print_r($weather_rain);
+
+        $list = [];
+        foreach ($weather_rain as $i => $w)
+        {
+            $list[] = array('datetime' => $w['date'], 'rainfall' => $w['rainfall']);
+        }
+
+        // DB登録
+        $db_rain = new Rain($this->location);
+        $db_rain->SetData($list);
+
+        // 表示用データ作成
+        $now = new DateTime();
+
+        $weather_rain = [];
+        if ($db_rain->IsRainForecast())
+        {
+            $rain_data = $db_rain->GetData();
+
+            foreach ($rain_data as $r)
+            {
+                $db_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $r['datetime']);
+
+                $weather_rain[] = array('time_mm' => $now->diff($db_datetime, true)->format('%i 分後'), 
+                                        'rainfall' => $r['rainfall'],
+                                        'rainfall_color' => Color::GetRainfallColor($r['rainfall']));
+            }
+        } else {
+            $weather_rain = [];
+        }
+
+        // switch bot --------------------------------------------------------
+        $swbt = new SwitchBotApi;
+        // $swbt_devices = $swbt->GetDevices();
+
+
+        $swbt_lists = $swbt->ShowSwitchBotMeter();
+
+        return $swbt_lists;
+    }
+
+    public function getTemp(Request $request) {
+        $ret = $this->ajaxTest();
+
+        return json_encode($ret);
+    }
+
+
 }
+
