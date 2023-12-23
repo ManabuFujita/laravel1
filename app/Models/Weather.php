@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use DateTime;
 use DateTimeImmutable;
+use DateInterval;
 
 class Weather extends Model
 {
@@ -69,7 +70,8 @@ class Weather extends Model
 
     public function SetForecastData($data)
     {
-        self::DeleteYesterdayData();
+        // self::DeleteYesterdayData();
+        self::deleteOldDataFrom('-2 days');
 
         self::UpdateData('forecast', $data);
     }
@@ -92,19 +94,36 @@ class Weather extends Model
         return $this->where('location', $this->location)->orderBy('datetime', 'asc')->get();
     }
 
-    private function deleteYesterdayData()
+    // private function deleteYesterdayData()
+    // {
+    //     $today = new DateTime();
+    //     $today->setTime(0, 0, 0, 0);
+
+    //     $this->where('location', $this->location)
+    //          ->where('mode', 'forecast')
+    //          ->where('datetime', '<', $today)
+    //          ->delete();
+
+    //     $this->where('location', $this->location)
+    //          ->where('mode', 'current')
+    //          ->where('datetime', '<', $today)
+    //          ->delete();
+    // }
+
+    private function deleteOldDataFrom($date_string = '-30 days')
     {
-        $today = new DateTime();
-        $today->setTime(0, 0, 0, 0);
+        $date = new DateTime();
+        $date->setTime(0, 0, 0, 0);
+        $date->add(DateInterval::createFromDateString($date_string));
 
         $this->where('location', $this->location)
              ->where('mode', 'forecast')
-             ->where('datetime', '<', $today)
+             ->where('datetime', '<=', $date)
              ->delete();
 
         $this->where('location', $this->location)
              ->where('mode', 'current')
-             ->where('datetime', '<', $today)
+             ->where('datetime', '<=', $date)
              ->delete();
     }
 
@@ -122,9 +141,10 @@ class Weather extends Model
                  'temperature' => $d['temperature'],
                  'rainfall' => $d['rainfall'],
                  'wind' => $d['wind'],
-                 'pressure' => $d['pressure']
+                 'pressure' => $d['pressure'],
+                 'cloud' => $d['cloud'],
                 ],
-            ], ['location', 'mode', 'datetime'], ['weather1', 'weather2', 'temperature', 'rainfall', 'wind', 'pressure']);
+            ], ['location', 'mode', 'datetime'], ['weather1', 'weather2', 'temperature', 'rainfall', 'wind', 'pressure', 'cloud']);
         }
     }
 
