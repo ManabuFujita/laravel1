@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\TodoListController;
+// use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\Test1Controller;
 
 /*
@@ -27,11 +27,11 @@ Route::get('/dashboard', function () {
 
 
 
-Route::get('/list', [TodoListController::class, 'index']);
+// Route::get('/list', [TodoListController::class, 'index']);
 
 // Route::get('/test1', [Test1Controller::class, 'index']);
-Route::get('/test1', [Test1Controller::class, 'index2']);
-Route::get('/test1/getTemp', [Test1Controller::class, 'getTemp']);
+Route::get('/test1', [Test1Controller::class, 'index2'])->name('root');
+Route::get('/test1/getTemp', [Test1Controller::class, 'getTemp'])->name('temperature');
 
 
 

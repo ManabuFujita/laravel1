@@ -409,16 +409,22 @@
             });
 
             // ループ処理
-            MINUTES = 1;
+            // MINUTES = 0.2;
+            MINUTES = 5;
             FRAME_TIME = MINUTES * 60 * 1000; // [ms/frame]
             setInterval(function() {
                 // console.log(Date.now());
                 getData();
             }, FRAME_TIME);
 
+            // console.log('test');
+            // console.log("{{ route('root') }}");
+
             function getData() {
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/test1/getTemp',
+                    // url: 'http://127.0.0.1:8000/test1/getTemp',
+                    // url: 'https://xprkd134.site/laravel/public/test1/getTemp',
+                    url: "{{ route('temperature') }}",
                     type: 'get',
                     dataType: 'JSON',
                     // data: {
@@ -433,12 +439,19 @@
                         // 色を変更
                         $('.switchbot #' + d['id']).find('.temperature').css('background-color', d['temperature_color']);
                         $('.switchbot #' + d['id']).find('.humidity').css('background-color', d['humidity_color']);
+
+                        // $('.switchbot #' + d['id']).find('.humidity').css('background-color', 'blue');
                     });
 
 
                     // $('#table').append(data['view'])
                 }).fail(function () {
-                    alert("エラーが起きました！");
+                    console.log('ajaxの通信に失敗しました');
+                    console.log('jqXHR: ' + jqXHR.status); // HTTPステータス
+                    console.log('textStatus: ' + textStatus); // タイムアウト、パースエラー
+                    console.log('errorThrown: ' + errorThrown.message); // 例外情報
+                    console.log('URL: ' + url);
+                    alert("エラーが発生しました");
                 });
             }
         </script>
