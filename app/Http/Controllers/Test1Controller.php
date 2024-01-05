@@ -50,6 +50,20 @@ class Test1Controller extends Controller
         return json_encode($this->swbt_lists);
     }
 
+    public function getRain(Request $request)
+    {
+        self::getRainData();
+
+        return json_encode($this->weather_rain);
+    }
+
+    public function getWeatherChart(Request $request)
+    {
+        self::getWeatherData();
+
+        return json_encode($this->weather_from_today);
+    }
+
     private function getAllData() 
     {
         // 位置情報 -----------------------------------------------------------
@@ -75,6 +89,9 @@ class Test1Controller extends Controller
 
     private function getRainData() 
     {
+        // 位置情報取得
+        self::getLocationData();
+
         $yahoo_weather = new YahooWeatherApi;
 
         // １時間降水量を取得

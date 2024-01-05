@@ -253,7 +253,7 @@
 
                 <!-- 1時間降水量 -->
 
-                <div class="row">
+                <div class="row rain">
                 <div class="col-md-12">
                 <div class="card mb-4 shadow-sm">
 
@@ -283,7 +283,7 @@
                     @else
                         @foreach ($weather_rain as $i => $weather)
 
-                            <div class="col-md-2 rounded">
+                            <div id="rain-{{ $i }}" class="col-md-2 rounded">
                                 <p class="card-text">
                                     @if ($i == 0)
                                         <!-- 雨マーク -->
@@ -410,17 +410,31 @@
 
             // ループ処理
             // MINUTES = 0.2;
-            MINUTES = 5;
-            FRAME_TIME = MINUTES * 60 * 1000; // [ms/frame]
+            const MINUTES_SWITCHBOT = 5; // minutes 本番用
+            let flame_time_switchbot = MINUTES_SWITCHBOT * 60 * 1000; // [ms/frame]
             setInterval(function() {
-                // console.log(Date.now());
-                getData();
-            }, FRAME_TIME);
+                getSwitchbot();
+            }, flame_time_switchbot);
 
-            // console.log('test');
-            // console.log("{{ route('root') }}");
+            // 1時間雨予報
+            const MINUTES_RAIN = 5; // minutes 本番用
+            let flame_time_rain = MINUTES_RAIN * 60 * 1000; // [ms/frame]
+            setInterval(function() {
+                // getRain();
+            }, flame_time_rain);
 
-            function getData() {
+
+            // チャート
+            const MINUTES_CHART = 10; // minutes 本番用
+            let flame_time_chart = MINUTES_CHART * 60 * 1000; // [ms/frame]
+            setInterval(function() {
+                getWeatherChart();
+            }, flame_time_chart);
+
+            getRain();
+
+
+            function getSwitchbot() {
                 $.ajax({
                     // url: 'http://127.0.0.1:8000/test1/getTemp',
                     // url: 'https://xprkd134.site/laravel/public/test1/getTemp',
@@ -446,7 +460,7 @@
 
                     // $('#table').append(data['view'])
                 }).fail(function () {
-                    console.log('ajaxの通信に失敗しました');
+                    console.log('ajaxの通信に失敗しました:' + arguments.callee.name);
                     console.log('jqXHR: ' + jqXHR.status); // HTTPステータス
                     console.log('textStatus: ' + textStatus); // タイムアウト、パースエラー
                     console.log('errorThrown: ' + errorThrown.message); // 例外情報
@@ -454,6 +468,99 @@
                     alert("エラーが発生しました");
                 });
             }
+
+            function getRain() {
+                console.log("{{ route('rain') }}");
+
+                $.ajax({
+                    // url: 'http://127.0.0.1:8000/test1/getTemp',
+                    // url: 'https://xprkd134.site/laravel/public/test1/getTemp',
+                    url: "{{ route('rain') }}",
+                    type: 'get',
+                    dataType: 'JSON',
+                    // data: {
+                    //     "param": // Controllerに渡したい値
+                    // }
+                }).done(function (data) {
+                    console.log(data);
+                    data.forEach(function(d, index) {
+
+                        // テスト
+                        $('.rain #' + index).find('.card-text').text('aa');
+                        $('.rain #' + index).find('.text-center').text('11');
+                        // 色を変更
+                        $('.rain #' + index).find('.text-center').css('background-color', 'black');
+
+
+
+                        // // 値を変更
+                        // $('.rain #' + index).find('.card-text').text(d['time_mm']);
+                        // $('.rain #' + index).find('.text-center').text(d['rainfall']);
+                        // // 色を変更
+                        // $('.rain #' + index).find('.text-center').css('background-color', d['rainfall_color']);
+                    //     $('.switchbot #' + d['id']).find('.humidity').css('background-color', d['humidity_color']);
+
+                    //     // $('.switchbot #' + d['id']).find('.humidity').css('background-color', 'blue');
+                    });
+
+
+                    // $('#table').append(data['view'])
+                }).fail(function () {
+                    ajaxFail(arguments.callee.name);
+                });
+            }
+
+
+            function getWeatherChart() {
+                console.log("{{ route('weatherChart') }}");
+
+                $.ajax({
+                    // url: 'http://127.0.0.1:8000/test1/getTemp',
+                    // url: 'https://xprkd134.site/laravel/public/test1/getTemp',
+                    url: "{{ route('weatherChart') }}",
+                    type: 'get',
+                    dataType: 'JSON',
+                    // data: {
+                    //     "param": // Controllerに渡したい値
+                    // }
+                }).done(function (data) {
+                    data[5]['temp'] = 15;
+                    console.log(data);
+                    window.Laravel.weather = data;
+                    $.getScript("{{ asset('js/chart.js') }}");
+                    // data.forEach(function(d) {
+                    //     // 値を変更
+                    //     $('.rain #' + d['id']).find('.temperature').text(d['temperature'] + ' ℃');
+                    //     $('.switchbot #' + d['id']).find('.humidity').text(d['humidity'] + ' %');
+                    //     // 色を変更
+                    //     $('.switchbot #' + d['id']).find('.temperature').css('background-color', d['temperature_color']);
+                    //     $('.switchbot #' + d['id']).find('.humidity').css('background-color', d['humidity_color']);
+
+                    //     // $('.switchbot #' + d['id']).find('.humidity').css('background-color', 'blue');
+                    // });
+
+
+                    // $('#table').append(data['view'])
+                }).fail(function () {
+                    console.log('ajaxの通信に失敗しました:' + arguments.callee.name);
+                    console.log('jqXHR: ' + jqXHR.status); // HTTPステータス
+                    console.log('textStatus: ' + textStatus); // タイムアウト、パースエラー
+                    console.log('errorThrown: ' + errorThrown.message); // 例外情報
+                    console.log('URL: ' + url);
+                    alert("エラーが発生しました");
+                });
+            }
+            function ajaxFail(functionName) {
+                console.log('ajaxの通信に失敗しました:' + functionName);
+                console.log('jqXHR: ' + jqXHR.status); // HTTPステータス
+                console.log('textStatus: ' + textStatus); // タイムアウト、パースエラー
+                console.log('errorThrown: ' + errorThrown.message); // 例外情報
+                console.log('URL: ' + url);
+                alert("エラーが発生しました");                
+            }
+
+
+
         </script>
 
 

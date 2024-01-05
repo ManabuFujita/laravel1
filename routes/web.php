@@ -32,6 +32,8 @@ Route::get('/dashboard', function () {
 // Route::get('/test1', [Test1Controller::class, 'index']);
 Route::get('/test1', [Test1Controller::class, 'index2'])->name('root');
 Route::get('/test1/getTemp', [Test1Controller::class, 'getTemp'])->name('temperature');
+Route::get('/test1/getRain', [Test1Controller::class, 'getRain'])->name('rain');
+Route::get('/test1/getWeatherChart', [Test1Controller::class, 'getWeatherChart'])->name('weatherChart');
 
 
 
