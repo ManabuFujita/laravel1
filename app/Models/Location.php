@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Controllers\YahooWeatherApi;
+use Illuminate\Database\QueryException;
 
 class Location extends Model
 {

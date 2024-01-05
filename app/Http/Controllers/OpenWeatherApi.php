@@ -8,6 +8,7 @@ use App\Http\Controllers\LocationController;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
+use Exception;
 
 class OpenWeatherApi
 {
@@ -107,8 +108,10 @@ class OpenWeatherApi
                . '&appid=' . $this->api_key
                . '&units=metric&lang=ja';
 
-        $weather_json = file_get_contents($url);
-        $weather_array = json_decode($weather_json, true);
+        $contents = self::FetchData($url);
+        $weather_array = json_decode($contents, true);  
+        // $weather_json = file_get_contents($url);
+        // $weather_array = json_decode($weather_json, true);
         
         return $weather_array;
     }
@@ -121,11 +124,21 @@ class OpenWeatherApi
                 . '&appid=' . $this->api_key
                 . '&units=metric&lang=ja';
 
-        $weather_json = file_get_contents($url);
-        $weather_array = json_decode($weather_json, true);  
+        $contents = self::FetchData($url);
+        $weather_array = json_decode($contents, true);  
+        // $weather_json = file_get_contents($url);
+        // $weather_array = json_decode($weather_json, true);  
         
         return $weather_array;
     }
 
-
+    private function FetchData($url)
+    {
+        try {
+            $contents = file_get_contents($url);
+            return $contents;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
 }
